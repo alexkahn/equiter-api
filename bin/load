@@ -2,10 +2,11 @@
 
 var fs = require('fs')
   , Converter = require('csvtojson').Converter
+  , config = require('../config')
   , cpus = require('os').cpus().length
   , through = require('through')
   , redis = require('redis')
-  , client = redis.createClient()
+  , client = redis.createClient(config.redis.port, config.redis.host, {auth_pass: config.redis.pass})
   , inputStream = fs.createReadStream('./stock_symbols.csv')
   , addNewLine = through(write, end)
   , INDEX = 'autocompl'
