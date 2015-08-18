@@ -1,0 +1,55 @@
+#!/usr/local/bin/node
+
+var fs = require('fs')
+  , Converter = require('csvtojson').Converter
+  , cpus = require('os').cpus().length
+  , through = require('through')
+  , redis = require('redis')
+  , client = redis.createClient()
+  , inputStream = fs.createReadStream('./stock_symbols.csv')
+  , addNewLine = through(write, end)
+  , INDEX = 'autocompl'
+  , csvConverter = new Converter({
+      constructResult: false,
+      workerNum: cpus,
+      delimiter: ','
+    })
+  ;
+
+inputStream
+  .pipe(csvConverter)
+  .pipe(addNewLine)
+  .on('data', function (data) {
+    var row = JSON.parse(data);
+    generatePrefixes(sanitize(row.Name)).map(function (prefix) {
+      if (prefix[prefix.length - 1] === '*') {
+        client.set(prefix, data, function(err, res) { if (err) { throw err; } });
+      }
+      client.zadd(INDEX, 0, prefix, function(err, res) { if (err) { throw err; } return res; });
+    });
+    client.set(row.Symbol, data, function(){});
+  })
+  .on('end', function() {
+    process.exit(0);
+  });
+
+function write(row) {
+  this.queue(row + '\n');
+}
+
+function end() {
+  this.queue(null);
+}
+
+function sanitize (s) {
+  return s.trim().replace(/[\.,]/g, "").toLowerCase();
+}
+
+function generatePrefixes (s) {
+  var result = [];
+  for (var i = 1; i <= s.length; i++) {
+    result.push(s.slice(0, i));
+  }
+  result.push(s + '*');
+  return result;
+}

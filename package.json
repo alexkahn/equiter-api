@@ -1,0 +1,22 @@
+{
+  "name": "equiter",
+  "version": "0.1.0",
+  "description": "Web app for checking out historical equity prices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "load": "./bin/load"
+  },
+  "author": "Alex Kahn",
+  "license": "MIT",
+  "dependencies": {
+    "csvtojson": "^0.4.1",
+    "hapi": "^8.8.1",
+    "hiredis": "^0.4.0",
+    "joi": "^6.6.1",
+    "lout": "^6.2.3",
+    "redis": "^0.12.1",
+    "split": "^1.0.0",
+    "through": "^2.3.8"
+  }
+}
