@@ -1,9 +1,9 @@
 var Hapi = require('hapi');
 var Routes = require('./lib/routes');
-
+var config = require('config');
 var server = new Hapi.Server();
 
-server.connection({port: 3000});
+server.connection({port: config.port});
 
 server.route(Routes);
 

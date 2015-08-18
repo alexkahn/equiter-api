@@ -6,7 +6,8 @@ var config = {
       host: 'localhost',
       port: '6379',
       pass: ''
-    }
+    },
+    port: 3000
   },
   test: {},
   production: {
@@ -15,7 +16,8 @@ var config = {
       port: process.env.REDIS_PORT,
       user: process.env.REDIS_USER,
       pass: process.env.REDIS_PASS
-    }
+    },
+    port: process.env.PORT
   }
 };
 
