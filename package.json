@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "load": "./bin/load",
-    "postinstall": "npm run load"
+    "postinstall": "node bin/load"
   },
   "author": "Alex Kahn",
   "license": "MIT",
