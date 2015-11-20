@@ -1,14 +1,49 @@
-var Hapi = require('hapi');
-var Routes = require('./lib/routes');
-var config = require('./config');
-var server = new Hapi.Server();
+var Hapi = require('hapi')
+  , Good = require('good')
+  , Inert = require('inert')
+  , Routes = require('./lib/routes')
+  , config = require('./config')
+  , server = new Hapi.Server()
+  ;
 
-server.connection({port: config.port, routes: { cors: true }});
+server.connection({
+  port: config.port,
+  routes: { cors: true }
+});
 
 server.route(Routes);
 
-server.register({ register: require('lout') }, function(err) {});
+server.register(Inert, function () {});
 
-server.start(function() {
-  console.log("Server running at: ", server.info.uri);
+server.register(require('vision'), (err) => {
+  if (err) {
+    server.log('error', "Failed to load vision.");
+  }
 });
+
+server.register({ register: require('lout') }, function(err) {
+  if (err) {
+    throw err;
+  }
+});
+
+server.register({
+  register: Good,
+  options: {
+    reporters: [{
+      reporter: require('good-console'),
+      events: {
+        reponse: '*',
+        log: '*'
+      }
+    }]
+  }
+}, function (err) {
+  if (err) {
+    throw err;
+  }
+  server.start(function () {
+    server.log('info', 'Server running at: ' + server.info.uri);
+  });
+});
+
