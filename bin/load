@@ -15,8 +15,17 @@ var fs = require('fs')
       workerNum: cpus,
       delimiter: ','
     })
+  , listAccum = []
   ;
 
+console.log('Flushing database');
+var flushed = client.flushdb();
+if (flushed) {
+  console.log('Database flushed successfully');
+} else {
+  console.log('Error flushing database');
+}
+console.log('Loading data into database');
 inputStream
   .pipe(csvConverter)
   .pipe(addNewLine)
@@ -29,10 +38,14 @@ inputStream
       client.zadd(INDEX, 0, prefix, function(err, res) { if (err) { throw err; } return res; });
     });
     client.set(row.Symbol, data, function(){});
+    listAccum.push(row.Symbol);
   })
   .on('end', function() {
+    client.set('symbols', JSON.stringify(listAccum));
+    console.log('Load complete: carry on.');
     process.exit(0);
   });
+
 
 function write(row) {
   this.queue(row + '\n');
