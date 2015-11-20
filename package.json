@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Web app for checking out historical equity prices",
   "main": "index.js",
+  "engines": {
+    "node": "5.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "load": "./bin/load",

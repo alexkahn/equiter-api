@@ -36,3 +36,6 @@ Just run ```node index.js```.
 
 If you run node-foreman, you can just use that because there's a
 Procfile!
+
+## Api Docs
+The documentation is available under the ```/docs``` route.
