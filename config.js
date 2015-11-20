@@ -4,7 +4,7 @@ var config = {
   development: {
     redis: {
       host: 'localhost',
-      port: '6379',
+      port: 6379,
       pass: ''
     },
     port: 3000

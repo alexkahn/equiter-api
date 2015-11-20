@@ -3,7 +3,7 @@ var Routes = require('./lib/routes');
 var config = require('./config');
 var server = new Hapi.Server();
 
-server.connection({port: config.port});
+server.connection({port: config.port, routes: { cors: true }});
 
 server.route(Routes);
 
